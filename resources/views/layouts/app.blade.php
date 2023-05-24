@@ -12,12 +12,14 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+    <!-- Styles -->
+    @livewireStyles
+    @stack('css')
+
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
 
-    <!-- Styles -->
-
-    @livewireStyles
 </head>
 
 <body class="font-sans antialiased">
@@ -43,6 +45,8 @@
 
     @stack('modals')
 
+
+
     @livewireScripts
 
     <script>
@@ -50,7 +54,7 @@
             alert($mensaje)
         })
     </script>
-
+    @stack('js')
 </body>
 
 </html>

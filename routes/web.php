@@ -27,11 +27,10 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->get('/estudios',GrillaEstudios::class)->name('estudios');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified'
 ])->get('/pdf',PdfInforme::class)->name('pdf');
 
-Route::get('/editor', EditorComponent::class)->name('editor');
-Route::post('/pdf', [PDFController::class, 'generatePDF'])->name('pdf.generate');
