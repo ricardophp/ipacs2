@@ -7,7 +7,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Livewire\TemporaryUploadedFile;
 use Illuminate\Http\File;
 
@@ -103,7 +103,6 @@ class CargaInforme extends Component
 
     public function save()
     {
-        dd($this->pdf);
         $this->SubeInforme($this->estudio, $this->pdf);
     }
 
@@ -117,8 +116,26 @@ class CargaInforme extends Component
         foreach ($series as $serie) {
             $thumb[] = 'http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/'. $this->estudio .'/series/'.$serie["0020000E"]["Value"][0].'/thumbnail';
         }
-
         return view('livewire.carga-informe',compact('thumb'));
+
+/* ************************************
+        'Fecha',//);//00080020
+        'DNI',//);//00100020
+        'Paciente',//);//00100010
+        'Sexo',//);//00100040
+        'Nacimiento',//);//00100030
+        'Os',//);Series: 00081040: Institution Department Name ó 00081050: Accession Number
+        'Médico',//);//00080090
+        'Diagnóstico',//)//;//00081030
+        'Descripcion',//)//;//ver serie
+        'Ubicación',//);//00080050
+        'PCuerpo',//);//Series: 00180015: Body Part Examined
+        'Mo',//);//00080061
+        'CantInst',//);//7777102A
+        'studyUID',//)->unique();//0020000D
+
+*********************************** */
+
     }
 
     public function pdf()

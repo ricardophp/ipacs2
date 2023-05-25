@@ -6,7 +6,8 @@
     <x-dialog-modal wire:model="open">
 
         <x-slot name="title">
-            <h1> Informe del Estudio de {{ $nombre }}</h1>
+            <h1> Informe del Estudio de {!! $nombre !!}</h1>
+            <h2></h2>
         </x-slot>
 
         <x-slot name="content">
@@ -27,11 +28,18 @@
 
             <div class="mb-4">
                 <x-label value="INFORME" />
-                <div id="content" wire:ignore>
-                    <textarea id="content" rows=10
+
+                <x-classic-editor wire:model="content" />
+
+                {{ $content }}
+
+                {{-- <div wire:ignore>
+                     <textarea id="content" rows=20
                         class="w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                        wire:model="content">{!! $content !!}</textarea>
-                </div>
+                        wire:model="content">
+                    </textarea>
+                </div> --}}
+
                 <x-input-error for="content"></x-input-error>
             </div>
             <x-danger-button wire:click="pdf" wire:loading.attr="disabled" wire:target="pdf, save"
@@ -56,16 +64,4 @@
             </div>
         </x-slot>
     </x-dialog-modal>
-
-    @push('jsnpm')
-        <script>
-            ClassicEditor
-                .create(document.querySelector('#content'))
-                .catch(error => {
-                    console.error(error);
-                });
-        </script>
-    @endpush
-
-
 </div>

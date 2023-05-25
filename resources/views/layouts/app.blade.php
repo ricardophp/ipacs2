@@ -54,7 +54,26 @@
             alert($mensaje)
         })
     </script>
-    @stack('js')
+
+{{-- <script>
+    ClassicEditor
+        .create(document.querySelector('#content'))
+        .then(editor => {
+            editor.model.document.on('change:data', () => {
+            @this.set('content', editor.getData());
+            })
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script> --}}
+<script>
+    ClassicEditor
+        .create( document.querySelector( '#content' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+</script>
 </body>
 
 </html>

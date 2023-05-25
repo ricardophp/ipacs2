@@ -15,7 +15,7 @@
                 <label for="paciente">paciente:</label>
                 {{-- <input wire:model="paciente" type="text" id="paciente"> --}}
                 <x-input wire:model="filtroPaciente" type="text" />
-           </div>
+            </div>
         </div>
         <!--Card-->
         <div id='recipients' class="p-8 mt-6 lg:mt-0 rounded shadow bg-white">
@@ -60,7 +60,8 @@
                                 class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Inst</th>
                             <th>Informado</th>
                             <th class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Acción</th>
-                            <th class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Informe</th>
+                            <th class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Informe
+                            </th>
                         </tr>
                     @else
                         <tr></tr>
@@ -96,7 +97,7 @@
                                 {{-- Paciente --}}
                                 @if (isset($estudio['00100010']['Value'][0]['Alphabetic']))
                                     <td class="whitespace-normal px-4 py-2 text-gray-700">
-                                        {{ $estudio['00100010']['Value'][0]['Alphabetic'] }}</td>
+                                        {!! $estudio['00100010']['Value'][0]['Alphabetic'] !!}</td>
                                 @else
                                     <td>-</td>
                                 @endif
@@ -172,13 +173,14 @@
                                     <td>-</td>
                                 @endif
 
-                                @if (array_search('DOC', $estudio['00080061']['Value'])<>'')
+                                @if (array_search('DOC', $estudio['00080061']['Value']) != '')
                                     <td class="whitespace-normal px-4 py-2 text-gray-700">
-                                        {{ $estudio['00080061']['Value'][array_search('DOC', $estudio['00080061']['Value'])] }}</td>
+                                        {{ $estudio['00080061']['Value'][array_search('DOC', $estudio['00080061']['Value'])] }}
+                                    </td>
                                 @else
                                     <td>-</td>
                                 @endif
-                                            <td></td>
+                                <td></td>
 
                                 @if (isset($estudio['0020000D']['Value'][0]))
                                     <td class="whitespace-normal px-4 py-2">
@@ -189,11 +191,12 @@
                                         </a>
                                     </td>
                                     <td>
-                                        @livewire('carga-informe', ['estudio' => $estudio['0020000D']['Value'][0], 'nombre'=>$estudio['00100010']['Value'][0]['Alphabetic'],key($estudio['0020000D']['Value'][0])])
+                                        @livewire('carga-informe', ['estudio' => $estudio['0020000D']['Value'][0], 'nombre' => $estudio['00100010']['Value'][0]['Alphabetic'], key($estudio['0020000D']['Value'][0])])
+
                                     </td>
                                 @else
-                                <td></td>
-                                <td></td>
+                                    <td></td>
+                                    <td></td>
                                 @endif
                             </tr>
                         @endforeach
@@ -214,5 +217,4 @@
         </div>
         <!--/Card-->
     </div>
-
 </div>
