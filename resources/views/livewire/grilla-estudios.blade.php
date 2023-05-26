@@ -128,6 +128,7 @@
                                 @else
                                     <td>-</td>
                                 @endif --}}
+
                                 {{-- doctor --}}
                                 @if (isset($estudio['00080090']['Value'][0]['Alphabetic']))
                                     <td class="whitespace-normal px-4 py-2 text-gray-700">

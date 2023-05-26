@@ -1,13 +1,11 @@
 <div>
-    <x-danger-button wire:click="$set('open',true)" class="bg-blue-600">
-        Informe
-    </x-danger-button>
+
 
     <x-dialog-modal wire:model="open">
 
         <x-slot name="title">
             <h1> Informe del Estudio de {!! $nombre !!}</h1>
-            <h2></h2>
+            <h2>{{ $estudio }}</h2>
         </x-slot>
 
         <x-slot name="content">
@@ -42,7 +40,8 @@
 
                 <x-input-error for="content"></x-input-error>
             </div>
-            <x-danger-button wire:click="pdf" wire:loading.attr="disabled" wire:target="pdf, save"
+
+           <x-danger-button wire:click="pdf" wire:loading.attr="disabled" wire:target="pdf, save"
                 class="disabled:opacity-25">
                 Grabar Informe
             </x-danger-button>

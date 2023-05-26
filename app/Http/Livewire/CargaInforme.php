@@ -143,11 +143,25 @@ class CargaInforme extends Component
         $this->validate(); //ejecuta las validaciones de $rules
         $content = $this->content;
 
-        view()->share('content',$content);
-        $pdf = PDF::loadView('livewire.pdf-informe', ['content'=>$content]);
-        $pdf->save(storage_path('app/public/'.$this->estudio.'.pdf'));
+        $response = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies?includefield=all&StudyInstanceUID='. $this->estudio);
+        $estudio = $response->json();
 
-        $this->SubeInforme($this->estudio, $pdf->output(),'app/public/'.$this->estudio.'.pdf');
+        $response2 = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/'. $this->estudio .'/series?includefield=all');
+        $series = $response2->json();
+
+        $pdf = PDF::loadView('livewire.pdf-informe', ['content'=>$content,'estudio'=>$estudio,'series'=>$series]);
+//        $pdf->save(storage_path('app\public\\'.$this->estudio.'.pdf'));
+
+        Storage::put('public/' . $this->estudio . '.pdf', $pdf->output());
+
+        $pdfPath = Storage::url($this->estudio . '.pdf');
+
+        $this->dispatchBrowserEvent('pdfGenerated', ['pdfPath' => $pdfPath]);
+
+        $this->open=false;
+        // return $pdf->stream('app\public\\'.$this->estudio.'.pdf');
+
+        // $this->SubeInforme($this->estudio, $pdf->output(),'app/public/'.$this->estudio.'.pdf');
     }
 
 }
