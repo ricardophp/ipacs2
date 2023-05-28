@@ -150,18 +150,20 @@ class CargaInforme extends Component
         $series = $response2->json();
 
         $pdf = PDF::loadView('livewire.pdf-informe', ['content'=>$content,'estudio'=>$estudio,'series'=>$series]);
-//        $pdf->save(storage_path('app\public\\'.$this->estudio.'.pdf'));
 
         Storage::put('public/' . $this->estudio . '.pdf', $pdf->output());
 
-        $pdfPath = Storage::url($this->estudio . '.pdf');
-
-        $this->dispatchBrowserEvent('pdfGenerated', ['pdfPath' => $pdfPath]);
+        $this->SubeInforme($this->estudio, $pdf->output(),'app/public/'.$this->estudio.'.pdf');
 
         $this->open=false;
+
         // return $pdf->stream('app\public\\'.$this->estudio.'.pdf');
 
         // $this->SubeInforme($this->estudio, $pdf->output(),'app/public/'.$this->estudio.'.pdf');
     }
+    public function abreForm(){
+        $this->open=true;
+        $this->content="";
 
+      }
 }

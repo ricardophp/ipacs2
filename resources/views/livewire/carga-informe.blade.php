@@ -1,6 +1,8 @@
 <div>
 
-
+    <x-danger-button wire:click="abreForm" class="bg-blue-600">
+        Informe
+    </x-danger-button>
     <x-dialog-modal wire:model="open">
 
         <x-slot name="title">

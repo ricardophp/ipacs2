@@ -1,7 +1,7 @@
 <div>
 
     <!--Container-->
-    <div class="container w-full md:w-4/5 xl:w-3/5  mx-auto px-2 padding-top: 1em;">
+    {{-- <div class="container w-full md:w-4/5 xl:w-3/5  mx-auto px-2 padding-top: 1em;"> --}}
         <div class="flex justify-between items-center mb-4">
             <div>
                 <label for="fechad">desde:</label>
@@ -217,5 +217,5 @@
             @endif
         </div>
         <!--/Card-->
-    </div>
+    {{-- </div> --}}
 </div>
