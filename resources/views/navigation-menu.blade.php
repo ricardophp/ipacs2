@@ -12,13 +12,17 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
+                    @can('dashboard')
+                        <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
+                    @endcan
 
-                    <x-nav-link href="{{ route('estudios') }}" :active="request()->routeIs('estudios')">
-                        {{ __('estudios') }}
-                    </x-nav-link>
+                    @can('estudios')
+                        <x-nav-link href="{{ route('estudios') }}" :active="request()->routeIs('estudios')">
+                            {{ __('estudios') }}
+                        </x-nav-link>
+                    @endcan
 
 
                 </div>
@@ -145,13 +149,17 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
+            @can('dashboard')
+                <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+            @endcan
 
-            <x-responsive-nav-link href="{{ route('estudios') }}" :active="request()->routeIs('estudios')">
-                {{ __('estudios') }}
-            </x-responsive-nav-link>
+            @can('estudios')
+                <x-responsive-nav-link href="{{ route('estudios') }}" :active="request()->routeIs('estudios')">
+                    {{ __('estudios') }}
+                </x-responsive-nav-link>
+            @endcan
 
         </div>
 

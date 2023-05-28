@@ -105,6 +105,11 @@
 
                         </tbody>
                     </table>
+                    @if ($data->hasPages())
+                    <div class="mt-4">
+                        {{ $data->links() }}
+                    </div>
+                    @endif
                 </div>
                 {{-- fin grilla ------------------------ --}}
 

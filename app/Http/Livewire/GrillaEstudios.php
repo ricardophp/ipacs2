@@ -28,7 +28,7 @@ class GrillaEstudios extends Component
 
     public function render()
     {
-        $this->perPage = 10;
+        $this->perPage = 15;
         //$page = request()->query('page', 1); // Obtener el número de página actual
         $page = $this->page;
 
@@ -55,7 +55,7 @@ class GrillaEstudios extends Component
         $studies = collect($response->json());
 
         // Ordenar los resultados según el campo y tipo de orden
-        $studies = $studies->sortBy($this->campoOrden, SORT_REGULAR, $this->tipoOrden === 'asc')->values();
+        $studies = $studies->sortBy($this->campoOrden, SORT_REGULAR, $this->tipoOrden === 'desc')->values();
 
         // Crear una instancia de LengthAwarePaginator para gestionar la paginación
         $paginator = new LengthAwarePaginator($studies, $total, $this->perPage, $page);
