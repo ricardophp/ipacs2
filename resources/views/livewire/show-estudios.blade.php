@@ -15,8 +15,8 @@
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Fecha</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Médico</th>
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Diagnóstico</th>
-                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Paciente</th>
-                                <th class="px-4 py-2">Boton</th>
+                                <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Informe</th>
+                                <th class="px-4 py-2">Acción</th>
                                 @else
                                 <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">No hay estudios para mostrar</th>
                                 @endif
@@ -28,18 +28,24 @@
                             @foreach ($data as $estudio)
                             <tr>
                             {{-- Modalidad --}}
-                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{$estudio['00080061']['Value'][0]}}</td>
+                            @if (isset($estudio['00080061']['Value'][0]))
+                                <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">{{$estudio['00080061']['Value'][0]}}</td>
+                            @else
+                                <td>-</td>
+                            @endif
 
                                 {{-- Fecha--}}
                             @if(isset($estudio['00080020']['Value'][0]))
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{date('d/m/Y', strtotime($estudio['00080020']['Value'][0]))}}</td>
-                            @else <td>-</td>
+                            @else
+                                <td>-</td>
                             @endif
 
                             {{-- doctor --}}
                             @if(isset($estudio['00080090']['Value'][0]['Alphabetic']))
                                 <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{$estudio['00080090']['Value'][0]['Alphabetic']}}</td>
-                            @else <td>-</td>
+                            @else
+                                <td>-</td>
                             @endif
 
                                 {{-- Diagnostico--}}
@@ -48,61 +54,29 @@
                             @else <td>-</td>
                             @endif
 
-                                {{-- Paciente--}}
-                            @if(isset($estudio['00100010']['Value'][0]['Alphabetic']))
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{$estudio['00100010']['Value'][0]['Alphabetic']}}</td>
-                                @else <td>-</td>
+                                {{-- Informe --}}
+                            @if((isset($estudio['00080061']['Value'][0]))and($estudio['00080061']['Value'][0]=='DOC'))
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">Informado</td>
+                            @else
+                                <td>Informe Pendiente</td>
                             @endif
 
-                            {{-- DNI--}}
-    {{--                             @if(isset($estudio['00100020']['Value'][0]))
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{$estudio['00100020']['Value'][0]}}</td>
-                            @else <td>-</td>
-                            @endif
-
-                            {{-- Nacim--}}
-    {{--                             @if(isset($estudio['00100030']['Value'][0]))
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{$estudio['00100030']['Value'][0]}}</td>
-                            @else <td>-</td>
-                            @endif
-
-                            {{-- Sexo--}}
-    {{--                             @if(isset($estudio['00100040']['Value'][0]))
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{$estudio['00100040']['Value'][0]}}</td>
-                            @else <td>-</td>
-                            @endif
-
-                                                {{-- Edad--}}
-    {{--                             @if(isset($estudio['00101010']['Value'][0]))
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{$estudio['00101010']['Value'][0]}}</td>
-                            @else <td>-</td>
-                            @endif
-
-                                {{-- Tipo--}}
-    {{--                             @if(isset($estudio['00080050']['Value'][0]))
-                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{$estudio['00080050']['Value'][0]}}</td>
-                            @else <td>-</td>
-                            @endif
-                            --}}
                             @if(isset($estudio['0020000D']['Value'][0]))
-
-                            <td class="whitespace-nowrap px-4 py-2">
-
-                                <a href="http://imagenes.simedsalud.com.ar:8484/viewer.html?studyUID={{$estudio['0020000D']['Value'][0]}}&serverName=Antartida"
-                                    class="inline-block rounded bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700"
-                                    target="_blank">
-                                    Ver Estudio
-                                </a>
-                            </td>
-
+                                <td class="whitespace-nowrap px-4 py-2">
+                                    <a href="http://imagenes.simedsalud.com.ar:8484/viewer.html?studyUID={{$estudio['0020000D']['Value'][0]}}&serverName=Antartida"
+                                        class="inline-block rounded bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700"
+                                        target="_blank">
+                                        Ver Estudio
+                                    </a>
+                                </td>
+                            @else
+                                <td>-</td>
                             @endif
-
                             </tr>
                             @endforeach
                         @else
                         <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">'No existen estudio cargados con su DNI. Si cree que es un error comuníquese con el área diagnóstico por Imágenes Sanatorio Antártida'</td>
                         @endif
-
                         </tbody>
                     </table>
                     @if ($data->hasPages())

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Actions\Jetstream\DeleteUser;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Http\Responses\LogoutResponse;
 use Laravel\Jetstream\Jetstream;
 
 class JetstreamServiceProvider extends ServiceProvider
@@ -24,6 +25,19 @@ class JetstreamServiceProvider extends ServiceProvider
         $this->configurePermissions();
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
+
+    // Personalizar la redirección después de cerrar sesión
+    $this->app->singleton(LogoutResponse::class, function () {
+        return new class extends LogoutResponse {
+            public function toResponse($request)
+            {
+                return $request->wantsJson()
+                    ? response()->json(['message' => 'Logged out'])
+                    : redirect('/login');
+            }
+        };
+    });
+
     }
 
     /**

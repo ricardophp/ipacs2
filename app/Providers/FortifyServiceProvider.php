@@ -60,11 +60,11 @@ class FortifyServiceProvider extends ServiceProvider
                     $fnac=$paciente[0]['00100030']['Value'][0];
                     $name = str_replace("^", " ", $paciente[0]['00100010']['Value'][0]['Alphabetic']);
 
-                    dd($dni.'-'.$fnac.'-'.$name);
+                //    dd($dni.'-'.$fnac.'-'.$name);
                     User::create([
                         'name'=>$name,
                         'id_paciente' =>$dni,
-                        'email'=>'pongaaqui@suemail.com',
+                        'email'=>$dni.'@suemail.com',
                         'password'=>bcrypt($fnac)
                     ])->assignRole('Pacientes');
 
