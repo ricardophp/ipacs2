@@ -42,8 +42,11 @@ class CargaInforme extends Component
 
     public function SubeInforme($estudio,$pdf,$ruta=''){
 
-        if ($ruta=='')  $path = $pdf->path();
-        else $path=$ruta;
+        if ($ruta=='')
+            $path = $pdf->path();
+        else
+            $path=$ruta;
+
         $barra = strrpos($path, "p/");
         $archivo = substr($path, $barra + 2);
 
@@ -103,7 +106,13 @@ class CargaInforme extends Component
 
     public function save()
     {
-        $this->SubeInforme($this->estudio, $this->pdf);
+
+        if ($this->pdf) {
+            $contenidoPDF = file_get_contents($this->pdf->getRealPath());
+            $nombrePDF = $this->pdf->getClientOriginalName();
+            $this->SubeInforme($this->estudio, $contenidoPDF, $nombrePDF);
+         }
+
     }
 
 
@@ -161,6 +170,8 @@ class CargaInforme extends Component
 
         // $this->SubeInforme($this->estudio, $pdf->output(),'app/public/'.$this->estudio.'.pdf');
     }
+
+
     public function abreForm(){
         $this->open=true;
         $this->content="";

@@ -25,42 +25,42 @@
                     @if ($paginator->count())
                         <tr>
                             <th scope="col"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900"
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900"
                                 wire:click="ordenar('00080061')">Mod</th>
                             <th wire:click="ordenar('00080020')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Fecha</th>
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">Fecha</th>
                             <th wire:click="ordenar('00100020')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">DNI</th>
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">DNI</th>
                             <th wire:click="ordenar('00100010')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Paciente
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">Paciente
                             </th>
                             <th wire:click="ordenar('00100040')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Sexo</th>
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">Sexo</th>
 
                             <th wire:click="ordenar('00100030')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">F Nac</th>
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">F Nac</th>
                             {{-- <th wire:click="ordenar('00081040')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">OS</th> --}}
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">OS</th> --}}
                             <th wire:click="ordenar('00080090')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Médico</th>
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">Médico</th>
                             <th wire:click="ordenar('00081030')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Diagnóstico
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">Diagnóstico
                             </th>
                             {{-- <th wire:click="ordenar('00080061')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Descripción
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">Descripción
                             </th> --}}
 
                             <th wire:click="ordenar('00080050')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Ubicación
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">Ubicación
                             </th>
                             {{-- <th wire:click="ordenar('00180015')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">P Cuerpo
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">P Cuerpo
                             </th> --}}
                             <th wire:click="ordenar('7777102A')"
-                                class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Inst</th>
-                            <th>Informado</th>
-                            <th class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Acción</th>
-                            <th class="cursor-pointer whitespace-nowrap px-4 py-2 font-medium text-gray-900">Informe
+                                class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">Inst</th>
+                            <th>Informe</th>
+                            <th class="cursor-pointer whitespace-nowrap px-4 py-2 text-sm text-gray-900">Acción</th>
+
                             </th>
                         </tr>
                     @else
@@ -73,14 +73,14 @@
                             <tr>
                                 {{-- Modalidad --}}
                                 @if (isset($estudio['00080061']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2 font-medium text-gray-900">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-900">
                                         {{ $estudio['00080061']['Value'][0] }}</td>
                                 @else
                                     <td>-</td>
                                 @endif
                                 {{-- Fecha --}}
                                 @if (isset($estudio['00080020']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ date('d/m/Y', strtotime($estudio['00080020']['Value'][0])) }}</td>
                                 @else
                                     <td>-</td>
@@ -88,7 +88,7 @@
 
                                 {{-- DNI --}}
                                 @if (isset($estudio['00100020']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ $estudio['00100020']['Value'][0] }}</td>
                                 @else
                                     <td>-</td>
@@ -96,7 +96,7 @@
 
                                 {{-- Paciente --}}
                                 @if (isset($estudio['00100010']['Value'][0]['Alphabetic']))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {!! $estudio['00100010']['Value'][0]['Alphabetic'] !!}</td>
                                 @else
                                     <td>-</td>
@@ -105,7 +105,7 @@
 
                                 {{-- Sexo --}}
                                 @if (isset($estudio['00100040']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ $estudio['00100040']['Value'][0] }}</td>
                                 @else
                                     <td>-</td>
@@ -115,7 +115,7 @@
 
                                 {{-- Fecha de Nacimiento --}}
                                 @if (isset($estudio['00100030']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ date('d/m/Y', strtotime($estudio['00100030']['Value'][0])) }}</td>
                                 @else
                                     <td>-</td>
@@ -123,7 +123,7 @@
 
                                 {{-- OS --}}
                                 {{-- @if (isset($estudio['00081040']['Value'][0]['Alphabetic']))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ $estudio['00081040']['Value'][0]['Alphabetic'] }}</td>
                                 @else
                                     <td>-</td>
@@ -131,7 +131,7 @@
 
                                 {{-- doctor --}}
                                 @if (isset($estudio['00080090']['Value'][0]['Alphabetic']))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ $estudio['00080090']['Value'][0]['Alphabetic'] }}</td>
                                 @else
                                     <td>-</td>
@@ -139,20 +139,20 @@
 
                                 {{-- Diagnostico --}}
                                 @if (isset($estudio['00081030']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ $estudio['00081030']['Value'][0] }}</td>
                                 @else
                                     <td>-</td>
                                 @endif
 
                                 {{-- descripcion --}}
-                                {{-- <td class="whitespace-normal px-4 py-2 text-gray-700">descripcion</td> --}}
+                                {{-- <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">descripcion</td> --}}
 
                                 {{-- ------------------------- --}}
 
                                 {{-- Ubicacion --}}
                                 @if (isset($estudio['00080050']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ $estudio['00080050']['Value'][0] }}</td>
                                 @else
                                     <td>-</td>
@@ -160,7 +160,7 @@
 
                                 {{-- Parte del Cuerpo
                                 @if (isset($estudio['00180015']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ $estudio['00180015']['Value'][0] }}</td>
                                 @else
                                     <td>-</td>
@@ -168,30 +168,48 @@
 
                                 {{-- Cantidad de Instancias --}}
                                 @if (isset($estudio['00201208']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ $estudio['00201208']['Value'][0] }}</td>
                                 @else
                                     <td>-</td>
                                 @endif
 
                                 @if (array_search('DOC', $estudio['00080061']['Value']) != '')
-                                    <td class="whitespace-normal px-4 py-2 text-gray-700">
+                                    {{-- <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                         {{ $estudio['00080061']['Value'][array_search('DOC', $estudio['00080061']['Value'])] }}
-                                    </td>
+                                    </td> --}}
+                                    <td class="px-6 py-4">
+                                        <span class="text-sm inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 font-semibold text-green-600">
+                                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3">
+                                            <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                                          </svg>
+                                          Informado
+                                        </span>
+                                      </td>
                                 @else
-                                    <td>-</td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-1  font-semibold text-red-600">
+                                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3">
+                                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                                      </svg>
+                                      Pendiente
+                                    </span>
+                                  </td>
                                 @endif
-                                <td></td>
 
                                 @if (isset($estudio['0020000D']['Value'][0]))
-                                    <td class="whitespace-normal px-4 py-2">
+                                    <td class="text-sm whitespace-normal px-4 py-2">
                                         <a href="http://imagenes.simedsalud.com.ar:8484/viewer.html?studyUID={{ $estudio['0020000D']['Value'][0] }}&serverName=Antartida"
-                                            class="inline-block rounded bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700"
+                                            class="inline-block rounded bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
                                             target="_blank">
                                             Ver
                                         </a>
                                     </td>
                                     <td>
+                                        {{-- <x-danger-button wire:click="abreForm()" class="bg-blue-600">
+                                            Informe
+                                        </x-danger-button> --}}
+
                                         @livewire('carga-informe', ['estudio' => $estudio['0020000D']['Value'][0], 'nombre' => $estudio['00100010']['Value'][0]['Alphabetic'], key($estudio['0020000D']['Value'][0])])
 
                                     </td>
@@ -202,7 +220,7 @@
                             </tr>
                         @endforeach
                     @else
-                        <td class="whitespace-normal px-4 py-2 font-medium text-gray-900">'No existen estudio cargados
+                        <td class="whitespace-normal px-4 py-2 text-sm text-gray-900">'No existen estudio cargados
                             para el filtro seleccionado.'</td>
                     @endif
 

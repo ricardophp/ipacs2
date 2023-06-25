@@ -57,7 +57,7 @@ class FortifyServiceProvider extends ServiceProvider
 
                 if ($paciente) {
                     $dni=$paciente[0]['00100020']['Value'][0];
-                    $fnac=$paciente[0]['00100030']['Value'][0];
+                //    $fnac=$paciente[0]['00100030']['Value'][0];
                     $name = str_replace("^", " ", $paciente[0]['00100010']['Value'][0]['Alphabetic']);
 
                 //    dd($dni.'-'.$fnac.'-'.$name);
@@ -65,10 +65,10 @@ class FortifyServiceProvider extends ServiceProvider
                         'name'=>$name,
                         'id_paciente' =>$dni,
                         'email'=>$dni.'@suemail.com',
-                        'password'=>bcrypt($fnac)
+                        'password'=>bcrypt($dni)
                     ])->assignRole('Pacientes');
 
-                    if ($request->password == $fnac){
+                    if ($request->password == $dni){
                         return $user;
                     }
                 }

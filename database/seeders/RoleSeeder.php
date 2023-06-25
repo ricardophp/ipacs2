@@ -10,7 +10,7 @@ use Spatie\Permission\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
-    /**
+    /** UTILIZAO LARAVEL SPATIE PARA ROLES Y PERMISOS!
      * Run the database seeds.
      */
     public function run(): void
@@ -20,8 +20,7 @@ class RoleSeeder extends Seeder
         $role3= Role::create(['name'=>'Pacientes']);
 
         $permission = Permission::create(['name' => 'dashboard'])->syncRoles([$role1,$role3]);
-        $permission = Permission::create(['name' => 'estudios'])->syncRoles([$role1,$role2]);;
-
-
+        $permission = Permission::create(['name' => 'estudios'])->syncRoles([$role1,$role2]);
+        $permission = Permission::create(['name' => 'users'])->syncRoles([$role1]);
     }
 }

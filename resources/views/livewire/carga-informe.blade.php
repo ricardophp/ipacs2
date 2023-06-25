@@ -1,8 +1,9 @@
 <div>
 
-    <x-danger-button wire:click="abreForm" class="bg-blue-600">
+    <x-danger-button wire:click="abreForm" class="text-sm bg-blue-600">
         Informe
     </x-danger-button>
+
     <x-dialog-modal wire:model="open">
 
         <x-slot name="title">
@@ -47,6 +48,8 @@
                 class="disabled:opacity-25">
                 Grabar Informe
             </x-danger-button>
+
+
             <x-secondary-button wire:click="$set('open',false)">
                 Cancelar
             </x-secondary-button>
@@ -54,6 +57,7 @@
 
         <x-slot name="footer">
             <div class="grid grid-cols-2 grid-rows-2 gap-4 sm:gap-6 lg:gap-8">
+
                 <input type="file" value="Subir Informe en formato PDF" wire:model="pdf">
 
                 <x-input-error for="pdf"></x-input-error>

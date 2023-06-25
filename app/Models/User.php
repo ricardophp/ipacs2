@@ -1,5 +1,9 @@
 <?php
 
+// uso spatie para roles y permisos
+// https://spatie.be/docs/laravel-permission/v5/basic-usage/basic-usage
+
+
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;

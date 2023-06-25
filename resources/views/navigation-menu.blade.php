@@ -24,6 +24,11 @@
                         </x-nav-link>
                     @endcan
 
+                    @can('users')
+                        <x-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
+                            {{ __('Users') }}
+                        </x-nav-link>
+                    @endcan
 
                 </div>
             </div>
@@ -161,6 +166,11 @@
                 </x-responsive-nav-link>
             @endcan
 
+            @can('users')
+                <x-responsive-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
+                    {{ __('users') }}
+                </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->
