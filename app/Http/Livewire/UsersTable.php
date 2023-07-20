@@ -19,6 +19,8 @@ class UsersTable extends Component
 
     public $perPage='10';
 
+    public $showModal='hidden';
+
     public function render()
     {
       return view('livewire.users-table',[
@@ -35,5 +37,13 @@ class UsersTable extends Component
         $this->search='';
         $this->perPage='10';
         $this->page='1';
+    }
+
+    public function ShowModalD(User $user){
+
+    }
+
+    public function ShowModalE (User $user){
+
     }
 }
