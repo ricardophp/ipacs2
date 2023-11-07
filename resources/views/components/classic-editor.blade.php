@@ -3,7 +3,7 @@
 }" x-init="
     ClassicEditor
     .create( $refs.myEditor,{
-        language: 'es'
+        language: 'en'
     })
     .then( editor => {
         editor.model.document.on('change:data', () => {
@@ -11,7 +11,7 @@
         });
     })
     .catch( error => {
-        console.error( error );
+        console.error(error);
     });
 ">
     <div x-ref="myEditor"></div>

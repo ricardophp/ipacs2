@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('Ubicación');//00080050
             $table->string('PCuerpo');//Series: 00180015: Body Part Examined
             $table->string('Mo');//00080061
+            $table->string('informe');//00080061
             $table->integer('CantInst');//7777102A
             $table->string('studyUID')->unique();//0020000D
             // ------------------- fin campos estudios

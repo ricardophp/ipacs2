@@ -106,26 +106,24 @@ class CargaInforme extends Component
 
     public function save()
     {
-
         if ($this->pdf) {
             $contenidoPDF = file_get_contents($this->pdf->getRealPath());
             $nombrePDF = $this->pdf->getClientOriginalName();
             $this->SubeInforme($this->estudio, $contenidoPDF, $nombrePDF);
          }
-
     }
 
 
     public function render()
     {
 
-        $response = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/'. $this->estudio .'/series');
-        $series = $response->json();
+        // $response = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/'. $this->estudio .'/series');
+        // $series = $response->json();
 
-        foreach ($series as $serie) {
-            $thumb[] = 'http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/'. $this->estudio .'/series/'.$serie["0020000E"]["Value"][0].'/thumbnail';
-        }
-        return view('livewire.carga-informe',compact('thumb'));
+        // foreach ($series as $serie) {
+        //     $thumb[] = 'http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/'. $this->estudio .'/series/'.$serie["0020000E"]["Value"][0].'/thumbnail';
+        // }
+         return view('livewire.carga-informe');//,compact('thumb'));
 
 /* ************************************
         'Fecha',//);//00080020

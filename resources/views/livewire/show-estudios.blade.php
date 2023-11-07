@@ -58,7 +58,7 @@
                             </div>
 
                                 {{-- Informe --}}
-                            @if((isset($estudio['00080061']['Value'][0]))and($estudio['00080061']['Value'][0]=='DOC'))
+                            @if (array_search('DOC', $estudio['00080061']['Value']) != '')
                             <td class="px-4 py-2">
                                 <span class="text-sm inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 font-semibold text-green-600">
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3">
@@ -83,7 +83,7 @@
                                     <a href="http://imagenes.simedsalud.com.ar:8484/viewer.html?studyUID={{$estudio['0020000D']['Value'][0]}}&serverName=Antartida"
                                         class="inline-block rounded bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700"
                                         target="_blank">
-                                        @if((isset($estudio['00080061']['Value'][0]))and($estudio['00080061']['Value'][0]=='DOC'))
+                                        @if (array_search('DOC', $estudio['00080061']['Value']) != '')
                                         Ver Estudio + informe
                                         @else
                                         Ver Estudio

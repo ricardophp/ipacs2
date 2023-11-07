@@ -15,9 +15,9 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name'=>'Ricardo Alejandro Godoy',
-            'id_paciente' =>'23691396',
+            'id_paciente' =>'Ricardo',
             'email'=>'ricardo.norbit@gmail.com',
-            'password'=>bcrypt('19740224')
+            'password'=>bcrypt('ricardo')
         ])->assignRole('Administrador');
 
         User::create([
@@ -32,5 +32,11 @@ class UserSeeder extends Seeder
             'email'=>'simedsalud@gmail.com',
             'password'=>bcrypt('Simed#23')
         ])->assignRole('Administrador');
+        User::create([
+            'name'=>'Medicos SIMED',
+            'id_paciente' =>'medicos',
+            'email'=>'simedsalud@gmail.com',
+            'password'=>bcrypt('medicos')
+        ])->assignRole('Médicos');
 }
 }

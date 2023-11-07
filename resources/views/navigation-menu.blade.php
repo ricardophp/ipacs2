@@ -24,8 +24,14 @@
                         </x-nav-link>
                     @endcan
 
+                    @can('estudios')
+                        <x-nav-link href="{{ route('estudios2') }}" :active="request()->routeIs('estudios2')">
+                            {{ __('Reporte') }}
+                        </x-nav-link>
+                    @endcan
+
                     @can('users')
-                        <x-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
+                        <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
                             {{ __('Users') }}
                         </x-nav-link>
                     @endcan
@@ -166,8 +172,14 @@
                 </x-responsive-nav-link>
             @endcan
 
+            @can('estudios')
+                <x-responsive-nav-link href="{{ route('estudios2') }}" :active="request()->routeIs('estudios2')">
+                    {{ __('estudios 2 (Beta)') }}
+                </x-responsive-nav-link>
+            @endcan
+
             @can('users')
-                <x-responsive-nav-link href="{{ route('users') }}" :active="request()->routeIs('users')">
+                <x-responsive-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
                     {{ __('users') }}
                 </x-responsive-nav-link>
             @endcan

@@ -163,6 +163,8 @@ return [
         /*
          * Application Service Providers...
          */
+
+        Livewire\LivewireServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
@@ -186,5 +188,6 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Livewire' => Livewire\Livewire::class,
     ])->toArray(),
 ];
