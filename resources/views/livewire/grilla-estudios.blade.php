@@ -14,9 +14,21 @@
             {{-- <input wire:model.debounce.1s="paciente" type="text" id="paciente"> --}}
             <x-input wire:model="filtroPaciente" type="text" id="filtroPaciente"/>
         </div>
-    </div>
+        @can('users')
+        <button wire:click="exportar()" class="flex flex-col items-center mr-10 bg-transparent text-gray-600 rounded">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px">
+                <defs><linearGradient id="G7C1BuhajJQaEWHVlNUzHa" x1="6" x2="27" y1="24" y2="24" data-name="Excel10" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#21ad64"/><stop offset="1" stop-color="#088242"/></linearGradient></defs>
+                <path fill="#31c447" d="m41,10h-16v28h16c.55,0,1-.45,1-1V11c0-.55-.45-1-1-1Z"/>
+                <path fill="#fff" d="m32,15h7v3h-7v-3Zm0,10h7v3h-7v-3Zm0,5h7v3h-7v-3Zm0-10h7v3h-7v-3Zm-7-5h5v3h-5v-3Zm0,10h5v3h-5v-3Zm0,5h5v3h-5v-3Zm0-10h5v3h-5v-3Z"/>
+                <path fill="url(#G7C1BuhajJQaEWHVlNUzHa)" d="m27,42l-21-4V10l21-4v36Z"/>
+                <path fill="#fff" d="m19.13,31l-2.41-4.56c-.09-.17-.19-.48-.28-.94h-.04c-.05.22-.15.54-.32.98l-2.42,4.52h-3.76l4.46-7-4.08-7h3.84l2,4.2c.16.33.3.73.42,1.18h.04c.08-.27.22-.68.44-1.22l2.23-4.16h3.51l-4.2,6.94,4.32,7.06h-3.74Z"/>
+                <title>Exportar</title>
+            </svg>
+        </button>
+        @endcan
 
-    {{$cadena}}
+    </div>
     <!-- Mostrar mensaje de carga cuando $consultando sea true -->
     {{-- @if ($consultando)
         <div class="text-gray-500 text-center py-4">
@@ -37,6 +49,8 @@
                             wire:click="ordenar('00080061')">Mod</th>
                         <th wire:click="ordenar('00080020')" class="cursor-pointer w-5 px-4 py-2 text-sm text-gray-900">
                             Fecha</th>
+                        <th wire:click="ordenar('00080030')" class="cursor-pointer w-5 px-4 py-2 text-sm text-gray-900">
+                            Hora</th>
                         <th wire:click="ordenar('00100020')" class="cursor-pointer w-5 px-4 py-2 text-sm text-gray-900">
                             DNI</th>
                         <th wire:click="ordenar('00100010')"
@@ -95,6 +109,13 @@
                             @if (isset($estudio['00080020']['Value'][0]))
                                 <td class="text-sm whitespace-normal px-4 py-2 text-gray-700">
                                     {{ date('d/m/Y', strtotime($estudio['00080020']['Value'][0])) }}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+
+                                {{-- Hora--}}
+                            @if(isset($estudio['00080030']['Value'][0]))
+                                <td class="whitespace-nowrap px-4 py-2 text-gray-700">{{date("H:i", strtotime(substr($estudio['00080030']['Value'][0], 0, 2) . ":" . substr($estudio['00080030']['Value'][0], 2, 2)));}}</td>
                             @else
                                 <td>-</td>
                             @endif

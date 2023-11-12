@@ -12,6 +12,7 @@ use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\LinkColumn;
+use Rappasoft\LaravelLivewireTables\Views\Filters\NumberFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
 class TablaEstudios extends DataTableComponent
@@ -75,6 +76,8 @@ class TablaEstudios extends DataTableComponent
                 ->sortable()
                 ->collapseOnMobile(),
             Column::make("Fecha", "Fecha")
+                ->sortable(),
+            Column::make("Hora", "Hora")
                 ->sortable(),
             Column::make("DNI", "DNI")
                 ->sortable()
@@ -140,6 +143,24 @@ class TablaEstudios extends DataTableComponent
             DateFilter::make('Hasta')
             ->filter(function($query,$value){
                 $query->whereDate('fecha','<=',$value);
+            }),
+            NumberFilter::make('HDesde')
+            ->config([
+                'placeholder' => 'Hora Desde HHmm',
+                'min' => '0000',
+                'max'=>'2359'
+            ])
+            ->filter(function(Builder $builder, string $value) {
+                $builder->where('hora', '>=', $value);
+            }),
+            NumberFilter::make('HHasta')
+            ->config([
+                'placeholder' => 'Hora Hasta HHmm',
+                'min' => '0000',
+                'max'=>'2359'
+            ])
+            ->filter(function(Builder $builder, string $value) {
+                $builder->where('hora', '<=', $value);
             }),
             TextFilter::make('OS')
             ->config([

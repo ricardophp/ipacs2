@@ -7,29 +7,43 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 use Illuminate\Support\Facades\Log;
-
-
+use Spatie\Permission\Models\Role;
 
 class UsersTable extends Component
 {
     public $users;
     public $selectedUser;
 
+    public $roles;
+    public $selectedRole;
+
+    public $page;
     public $search='';
     public $perPage='10';
+
     public $user;
-    public $page;
+    public $role;
+    public $confirmingUserDeletion=false;
+    public $confirmingUserAdd=false;
+    public $confirmingUserEdit=false;
 
-    public function mount()
-    {
-        //$this->users = User::all();
-    }
+    protected $rules = [
+        'user.name'  => 'required|string|min:4',
+        'user.email' => 'required|email',
+        'user.password' =>'nullable|min:6|same:user.password_confirmation',
+        'user.password_confirmation' => 'nullable',
+        'user.id_paciente' => 'required|string',
+    ];
 
-    public function showEditModal($id)
+
+    public function resetCampos()
     {
-        $this->selectedUser = User::find($id);
-        $this->emit('showEditUserModal');
-        dd($this->selectedUser);
+        $this->user['name']='';
+        $this->user['email']='';
+        $this->user['id_paciente']='';
+        $this->selectedRole='';
+
+        $this->user=null;
     }
 
     public function render()
@@ -39,119 +53,73 @@ class UsersTable extends Component
         ->orWhere('id_paciente', 'LIKE', "%{$this->search}%")
         ->paginate($this->perPage);
 
-      //  dd($users);
+        $this->roles = Role::all();
+
+        if (isset($this->user)) {
+            // Cargar roles disponibles
+            $this->roles = Role::all();
+
+            // Cargar el rol del usuario actual
+            if (isset($this->user->roles))
+            $this->selectedRole = $this->user->roles->first()->id;
+        }
 
         return view('livewire.users-table', compact('users1'));
     }
+
+    public function confirmUserDeletion($id)
+    {
+        $this->confirmingUserDeletion=$id;
+    }
+
+    public function deleteUser(User $user)
+    {
+        $user->delete();
+        $this->confirmingUserDeletion=false;
+    }
+
+    public function confirmUserAdd()
+    {
+        $this->resetCampos();
+        $this->confirmingUserAdd=true;
+    }
+
+    public function saveUser()
+    {
+        $this->validate();
+
+        if (isset($this->user->id))
+        {
+            $user = User::findOrFail($this->user->id);
+
+            $user->update([
+                'name' => $this->user['name'],
+                'email' => $this->user['email'],
+                'id_paciente' => $this->user['id_paciente'],
+                'password' => isset($this->user['password']) ? bcrypt($this->user['password']) : $user->password,
+            ]);
+            $user->roles()->sync([$this->selectedRole]);
+        }else{
+        User::create([
+            'name'         => $this->user['name'],
+            'email'        => $this->user['email'],
+            'password'     => bcrypt($this->user['password']),
+            'id_paciente'  => $this->user['id_paciente']
+        ])->assignRole($this->selectedRole);
+        }
+        $this->confirmingUserAdd=false;
+    }
+
+    public function confirmUserEdit(User $user)
+    {
+        $this->user = $user;
+        $this->confirmingUserAdd=true;
+    }
+
+    public function editUser(User $user)
+    {
+        $user->save();
+        $this->confirmingUserAdd=false;
+    }
+
 }
-
-// class UsersTable extends Component
-// {
-//     use WithPagination;
-
-//     // protected $queryString=[
-//     //     'search'=>['except'=>''],
-//     //     'perPage'
-//     // ];
-
-//     public $search='';
-//     public $perPage='10';
-//     public $user;
-
-//     public $roles = [];
-//     public $selectedUser; // New property to store the selected user
-//     public $users,
-//     $user_id,
-//     $id_paciente,
-//     $name,
-//     $email,
-//     $selectedRoles = [],
-//     $showModal = true;
-
-
-//     public function render()
-//     {
-//         $users1=User::where('name', 'LIKE', "%{$this->search}%")
-//         ->orWhere('email', 'LIKE', "%{$this->search}%")
-//         ->orWhere('id_paciente', 'LIKE', "%{$this->search}%")
-//         ->paginate($this->perPage);
-
-
-//        return view('livewire.users-table',compact('users1'));
-
-//     }
-
-//     public function create()
-//     {
-//         $this->resetFields();
-//         $this->showModal = true;
-//     }
-
-//     public function edit($id)
-//     {
-//         $user = User::findOrFail($id);
-//         // $this->user_id = $user->id;
-//         // $this->id_paciente = $user->id_paciente;
-//         // $this->name = $user->name;
-//         // $this->email = $user->email;
-//         // $this->selectedRoles = $user->roles->pluck('name')->toArray();
-//         // $this->showModal = true;
-//         $this->emit('showEditUserModal');
-//         //dd("user_id:".$user->id." name:".$user->name." showModal:".$this->showModal);
-//     }
-
-//     public function update()
-//     {
-//         $this->validate([
-//             'name' => 'required',
-//             'email' => 'required|email|unique:users,email,' . $this->user_id,
-//             'id_paciente' => 'required|unique:users',
-//         ]);
-
-//         $user = User::find($this->user_id);
-//         $user->update([
-//             'name' => $this->name,
-//             'email' => $this->email,
-//             'id_paciente' => $this->id_paciente,
-//         ]);
-
-//         $user->syncRoles($this->selectedRoles);
-
-//         $this->closeModal();
-//         $this->resetFields();
-//     }
-
-
-//     public function store()
-//     {
-//         $this->validate([
-//             'name' => 'required',
-//             'email' => 'required|email|unique:users,email,' . $this->user_id,
-//         ]);
-
-//         $user = User::updateOrCreate(['id' => $this->user_id], [
-//             'name' => $this->name,
-//             'email' => $this->email,
-//             'id_paciente' => $this->id_paciente,
-//         ]);
-
-//         $user->syncRoles($this->selectedRoles);
-
-//         $this->closeModal();
-//         $this->resetFields();
-//     }
-
-//     public function delete($id)
-//     {
-//         User::findOrFail($id)->delete();
-//     }
-
-//     private function resetFields()
-//     {
-//         $this->user_id = null;
-//         $this->name = '';
-//         $this->email = '';
-//         $this->id_paciente = '';
-//         $this->selectedRoles = [];
-//     }
-// }

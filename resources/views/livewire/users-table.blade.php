@@ -1,19 +1,14 @@
 <div>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-           Usuarios
-        </h2>
-    </x-slot>
-
+<div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
 
                 <div class="overflow-hidden rounded-lg border border-gray-200 shadow-md">
                     <div class="flex bg-white px-4 py-3 border-t border-gray-200 sm:px6">
-                        <button wire:click="create()" class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
+                        <x-button class="mr-3" wire:click="confirmUserAdd()">
                             Nuevo
-                        </button>
+                        </x-button>
 
                         <input
                             wire:model="search"
@@ -51,8 +46,10 @@
                         <tr class="hover:bg-gray-50">
                           <td class="px-6 py-4">
                             <div class="flex justify-end gap-4">
-                              <button wire:click="showEditModal({{ $user->id }})">Borrar</button>
-                              <button wire:click="showEditModal({{ $user->id }})">Editar</button>
+                              <button wire:click="confirmUserDeletion({{ $user->id }})" wire:loading.attr="disabled">
+                                @unless($user->getRoleNames()->join(', ')=='Administrador') Borrar @endunless </button>
+                              <button wire:click="confirmUserEdit({{ $user->id }})">
+                                @unless($user->getRoleNames()->join(', ')=='Administrador') Editar @endunless</button>
                             </div>
                           </td>
                           <th class="flex gap-3 px-6 py-4 font-normal text-gray-900">
@@ -93,57 +90,93 @@
         </div>
     </div>
 
-   <!-- Tabla de usuarios -->
-   {{-- <table class="min-w-full bg-white">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($users as $user)
-            <tr>
-                <td>{{ $user->id }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>
-                    <button wire:click="showEditModal({{ $user->id }})">Editar</button>
-                </td>
-            </tr>
-        @endforeach
-    </tbody>
-</table> --}}
+        <!-- Delete User Confirmation Modal -->
+    <x-dialog-modal wire:model="confirmingUserDeletion">
+        <x-slot name="title">
+                {{ __('Delete Account') }}
+        </x-slot>
 
- <!-- Modal para editar usuarios -->
- @if($selectedUser)
- <div class="modal" tabindex="-1" id="editUserModal">
-     <div class="modal-dialog">
-         <div class="modal-content">
-             <div class="modal-header">
-                 <h5 class="modal-title">Editar Usuario</h5>
-             </div>
-             <div class="modal-body">
-                 <p>ID: {{ $selectedUser->id }}</p>
-                 <p>Name: {{ $selectedUser->name }}</p>
-                 <p>Email: {{ $selectedUser->email }}</p>
-             </div>
-             <div class="modal-footer">
-                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                 <button type="button" class="btn btn-primary">Guardar cambios</button>
-             </div>
-         </div>
-     </div>
- </div>
- @endif
+        <x-slot name="content">
+                {{ __('¿Seguro que desea ELIMINAR el usuario?.') }}
+        </x-slot>
+
+        <x-slot name="footer">
+            <x-secondary-button wire:click="$set('confirmingUserDeletion',false)" wire:loading.attr="disabled">
+                    {{ __('Cancel') }}
+            </x-secondary-button>
+
+            <x-danger-button class="ml-3" wire:click="deleteUser({{ $confirmingUserDeletion }})" wire:loading.attr="disabled">
+                    {{ __('Delete Account') }}
+            </x-danger-button>
+        </x-slot>
+    </x-dialog-modal>
+
+        <!-- Add User Confirmation Modal -->
+        <x-dialog-modal wire:model="confirmingUserAdd">
+            <x-slot name="title">
+                    {{ isset($this->user->id)? 'Editar Usuario' : 'Nuevo usuario' }}
+            </x-slot>
+
+            <x-slot name="content">
+                <!-- Name -->
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="name" value="{{ __('Name') }}" />
+                    <x-input id="name" type="text" class="mt-1 block w-full" wire:model.defer="user.name"/>
+                    <x-input-error for="user.name" class="mt-2" />
+                </div>
+
+
+
+                <!-- Email -->
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="email" value="{{ __('Email') }}" />
+                    <x-input id="email" type="email" class="mt-1 block w-full" wire:model.defer="user.email"/>
+                    <x-input-error for="user.email" class="mt-2" />
+                </div>
+
+                <!-- Paciente -->
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="id_paciente" value="{{ __('DNI Paciente') }}" />
+                    <x-input id="id_paciente" type="text" class="mt-1 block w-full" wire:model.defer="user.id_paciente" />
+                    <x-input-error for="user.id_paciente" class="mt-2" />
+                </div>
+
+                <!-- Rol -->
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="role" value="{{ __('Role') }}" />
+                    <select id="role" wire:model.defer="selectedRole" class="mt-1 block w-full">
+                        <option value="" disabled>Select a role</option>
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                    <x-input-error for="selectedRole" class="mt-2" />
+                </div>
+
+                 <!-- Password -->
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="password" value="{{ __('Password') }}" />
+                    <x-input id="password" type="password" class="mt-1 block w-full" wire:model.defer="user.password"/>
+                    <x-input-error for="user.password" class="mt-2" />
+                </div>
+
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
+                    <x-input id="password_confirmation" type="password" class="mt-1 block w-full" wire:model.defer="user.password_confirmation" />
+                    <x-input-error for="user.password_confirmation" class="mt-2" />
+                </div>
+            </x-slot>
+
+            <x-slot name="footer">
+                <x-secondary-button wire:click="$set('confirmingUserAdd',false)" wire:loading.attr="disabled">
+                        {{ __('Cancel') }}
+                </x-secondary-button>
+
+                <x-danger-button class="ml-3" wire:click="saveUser()" wire:loading.attr="disabled">
+                        {{ __('Save') }}
+                </x-danger-button>
+            </x-slot>
+        </x-dialog-modal>
+
 </div>
-
-@push('scripts')
-    <script>
-        Livewire.on('showEditUserModal', function () {
-            $('#editUserModal').modal('show');
-        });
-    </script>
-@endpush
+</div>

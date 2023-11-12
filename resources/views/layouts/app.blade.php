@@ -18,8 +18,8 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
 
+    @livewireScripts
 </head>
 
 <body class="font-sans antialiased">
@@ -52,12 +52,7 @@
             {{ $slot }}
         </main>
 
-
-    </div>
-
     {{-- @stack('modals') --}}
-    @livewireScripts
-
     <script>
         livewire.on('alert',function($mensaje){
             alert($mensaje)
@@ -84,16 +79,9 @@
         });
     });
     </script>
+    </div>
+
+
+
 </body>
-
-
-
-{{-- <script>
-document.addEventListener('DOMContentLoaded', function() {
-    ClassicEditor
-        .create( document.querySelector( '#content' ) )
-        .catch( error => {console.error(error);} );
-});
-</script> --}}
-
 </html>

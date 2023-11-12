@@ -14,6 +14,7 @@ class Estudio extends Model
     //use HasFactory;
     protected $fillable = [
         'Fecha',//);//00080020
+        'Hora',//);//,00080030
         'DNI',//);//00100020
         'Paciente',//);//00100010
         'Sexo',//);//00100040
