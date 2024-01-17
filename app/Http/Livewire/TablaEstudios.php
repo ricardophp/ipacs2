@@ -231,12 +231,14 @@ class TablaEstudios extends DataTableComponent
          $desde = str_replace("-", "", $desde);
         if ($hasta<>'')
         $hasta = str_replace("-", "", $hasta);
+
         if ($desde<>''and$hasta<>'') $guion='-';
         else $guion='';
      //   dump('Ndesde:'.$desde.' Nhasta:'.$hasta);
+        $url_remota = config('api.url_remota');
+        $ae_title_remoto = config('api.ae_title_remoto');
 
-        debug($desde . $guion . $hasta);
-        $response = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies?includefield=all&StudyDate=' . $desde . $guion . $hasta);
+        $response = Http::get($url_remota.':8080/dcm4chee-arc/aets/'.$ae_title_remoto.'/rs/studies?includefield=all&StudyDate=' . $desde . $guion . $hasta);
 
         if (!$response->successful()) {// Manejar el error
             throw new Exception("Error al obtener estudios.");
@@ -248,7 +250,7 @@ class TablaEstudios extends DataTableComponent
         // Obtener los campos de las series para cada estudio y combinarlos
         foreach ($studies as $study) {
             $studyId = $study['0020000D']['Value'][0]; // Reemplaza con la clave correcta para el ID del estudio
-            $seriesResponse = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/' . $studyId . '/series?includefield=all');
+            $seriesResponse = Http::get($url_remota.':8080/dcm4chee-arc/aets/'.$ae_title_remoto.'/rs/studies/' . $studyId . '/series?includefield=all');
             $series = $seriesResponse->json();
             $study['series'] = $series;
 

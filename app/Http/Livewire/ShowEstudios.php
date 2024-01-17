@@ -21,18 +21,20 @@ class ShowEstudios extends Component
         $page = request()->query('page', 1); // Obtener el número de página actual
         //$page = $this->page;
 
+        $url_remota = config('api.url_remota');
+        $ae_title_remoto = config('api.ae_title_remoto');
 
         $user = Auth::user();
         // Acceder al nombre de usuario
         $id_paciente = $user->id_paciente;
-        $filtroPaciente='http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/patients?fuzzymatching=false&offset=0&includedefaults=true&onlyWithStudies=false&merged=false';
-        $TodosEstudios ='http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies?includefield=all';
+        $filtroPaciente=$url_remota.':8080/dcm4chee-arc/aets/'.$ae_title_remoto.'/rs/patients?fuzzymatching=false&offset=0&includedefaults=true&onlyWithStudies=false&merged=false';
+        $TodosEstudios =$url_remota.':8080/dcm4chee-arc/aets/'.$ae_title_remoto.'/rs/studies?includefield=all';
         $Filtrofecha = '&StudyDate=20220101-20220228';
         $FiltroPaciente='&PatientID='.$id_paciente;
         $response = Http::get($TodosEstudios.$FiltroPaciente);
         $estudios = $response->json();
 
-        $response2 = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/count'.'?PatientID='.$id_paciente);
+        $response2 = Http::get($url_remota.':8080/dcm4chee-arc/aets/'.$ae_title_remoto.'/rs/studies/count'.'?PatientID='.$id_paciente);
         $count = $response2->json();
 
         $total = $count["count"] ?? 0;

@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'id_paciente' =>'Ricardo',
             'email'=>'ricardo.norbit@gmail.com',
             'password'=>bcrypt('ricardo')
-        ])->assignRole('Administrador');
+        ])->assignRole('SuperAdmin');
 
         User::create([
             'name'=>'Marcelo Gustavo Dominguez',

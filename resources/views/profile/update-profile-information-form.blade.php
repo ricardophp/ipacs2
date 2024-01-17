@@ -81,6 +81,17 @@
                 @endif
             @endif
         </div>
+
+        <!-- DNI Usuario -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="id_paciente" value="Usuario" />
+            <x-input
+                    id="id_paciente"
+                    type="text"
+                    class="mt-1 block w-full"
+                    wire:model.defer="state.id_paciente"/>
+            <x-input-error for="id_paciente" class="mt-2" />
+        </div>
     </x-slot>
 
     <x-slot name="actions">

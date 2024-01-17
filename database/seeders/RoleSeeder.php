@@ -18,9 +18,10 @@ class RoleSeeder extends Seeder
         $role1= Role::create(['name'=>'Administrador']);
         $role2= Role::create(['name'=>'Médicos']);
         $role3= Role::create(['name'=>'Pacientes']);
+        $role4= Role::create(['name'=>'SuperAdmin']);
 
         $permission = Permission::create(['name' => 'dashboard'])->syncRoles([$role1,$role3]);
         $permission = Permission::create(['name' => 'estudios'])->syncRoles([$role1,$role2]);
-        $permission = Permission::create(['name' => 'users'])->syncRoles([$role1]);
+        $permission = Permission::create(['name' => 'users'])->syncRoles([$role1,$role4]);
     }
 }

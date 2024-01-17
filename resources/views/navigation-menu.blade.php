@@ -172,11 +172,11 @@
                 </x-responsive-nav-link>
             @endcan
 
-            @can('estudios')
+            {{-- @can('estudios')
                 <x-responsive-nav-link href="{{ route('estudios2') }}" :active="request()->routeIs('estudios2')">
-                    {{ __('estudios 2 (Beta)') }}
+                    {{ __('Reporte') }}
                 </x-responsive-nav-link>
-            @endcan
+            @endcan --}}
 
             @can('users')
                 <x-responsive-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">

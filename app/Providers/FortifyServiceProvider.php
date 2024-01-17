@@ -52,7 +52,10 @@ class FortifyServiceProvider extends ServiceProvider
             if ($user && Hash::check($request->password, $user->password)) {
                 return $user;
             }elseif(!$user){
-                $response = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies?includefield=all&PatientID='. $request->id_paciente);
+                $url_remota = config('api.url_remota');
+                $ae_title_remoto = config('api.ae_title_remoto');
+
+                $response = Http::get($url_remota.':8080/dcm4chee-arc/aets/'.$ae_title_remoto.'/rs/studies?includefield=all&PatientID='. $request->id_paciente);
                 $paciente = $response->json();
 
                 if ($paciente) {

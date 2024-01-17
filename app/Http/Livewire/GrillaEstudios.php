@@ -15,15 +15,15 @@ class GrillaEstudios extends Component
     use WithPagination;
 
     public $fechad, $fechah, $perPage;
-    public $filtroPaciente,$mayuscula,$cadena;
+    public $filtroPaciente, $mayuscula, $cadena;
     public $consultando = true;
 
     public $campoOrden = '00080020'; //fecha
     public $tipoOrden = 'DESC';
+    public $exportando = false; // Variable para controlar el estado de exportación
+    public $mostrarMensajeExportacion = false; // Variable para controlar la visibilidad del mensaje de exportación
 
-    //protected $listeners=['InformeExito'=>'render'];
-
-    protected $listeners = ['borrar' => 'borrar'];
+    protected $listeners = ['borrar' => 'borrar', 'InformeExito' => 'render','exportar'];
 
     public $copiado = false;
 
@@ -56,76 +56,79 @@ class GrillaEstudios extends Component
         $desde = str_replace("-", "", $this->fechad);
         $hasta = str_replace("-", "", $this->fechah);
 
-        $DNIPaciente=intval($this->filtroPaciente);
+        $DNIPaciente = intval($this->filtroPaciente);
 
-        if ($DNIPaciente===0)
-            $paciente='&PatientName=';
+        if ($DNIPaciente === 0)
+            $paciente = '&PatientName=';
         else
-            $paciente='&PatientID=';
+            $paciente = '&PatientID=';
 
 
-        $this->mayuscula=strtoupper($this->filtroPaciente);
+        $this->mayuscula = strtoupper($this->filtroPaciente);
 
-        if ($this->mayuscula<>'') {
+        if ($this->mayuscula <> '') {
             $filtro = $paciente . $this->mayuscula . '*&fuzzymatching=false';
         } else {
             $filtro = '&limit=' . $this->perPage . '&offset=' . ($page - 1) * $this->perPage;
         }
 
+        $url_remota = config('api.url_remota');
+        $ae_title_remoto = config('api.ae_title_remoto');
+
         //$this->cadena='$paciente='.$paciente.' http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies?includefield=all&StudyDate=' . $desde . '-' . $hasta . $filtro;
-        $response = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies?includefield=all&StudyDate=' . $desde . '-' . $hasta . $filtro);
+        $response = Http::get($url_remota . ':8080/dcm4chee-arc/aets/' . $ae_title_remoto . '/rs/studies?includefield=all&StudyDate=' . $desde . '-' . $hasta . $filtro);
         $studies = $response->json();
 
-        $response2 = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/count?StudyDate=' . $desde . '-' . $hasta . $filtro);
+        $response2 = Http::get($url_remota . ':8080/dcm4chee-arc/aets/' . $ae_title_remoto . '/rs/studies/count?StudyDate=' . $desde . '-' . $hasta . $filtro);
         $count = $response2->json();
 
         $total = $count["count"] ?? 0;
 
-        if (isset($studies)){// Obtener los campos de las series para cada estudio y combinarlos
-        foreach ($studies as &$study) {
-            $studyId = $study['0020000D']['Value'][0]; // Reemplaza con la clave correcta para el ID del estudio
-            $seriesResponse = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/' . $studyId . '/series?includefield=all');
-            $series = $seriesResponse->json();
-            $study['series'] = $series;
+        if (isset($studies)) { // Obtener los campos de las series para cada estudio y combinarlos
+            foreach ($studies as &$study) {
+                $studyId = $study['0020000D']['Value'][0]; // Reemplaza con la clave correcta para el ID del estudio
+                $seriesResponse = Http::get($url_remota . ':8080/dcm4chee-arc/aets/' . $ae_title_remoto . '/rs/studies/' . $studyId . '/series?includefield=all');
+                $series = $seriesResponse->json();
+                $study['series'] = $series;
 
-            if (array_search('DOC', $study['00080061']['Value']) != '')
-            $informe='si';else $informe='no';
-            $dataToUpsert[] = [
-                'Fecha' => $study['00080020']['Value'][0],
-                'Hora' => substr($study['00080030']['Value'][0],0,4),
-                'DNI' => $study['00100020']['Value'][0],
-                'Paciente' => $study['00100010']['Value'][0]['Alphabetic'],
-                'Sexo' => isset($study['00100040']['Value'][0])?$study['00100040']['Value'][0]:'-',
-                'Nacimiento' => $study['00100030']['Value'][0] ?? null,
-                'Os' =>isset($study['series'][0]['00081040']['Value'][0])
-                ? $study['series'][0]['00081040']['Value'][0]
-                : (isset($study['series'][0]['00081050']['Value'][0]['Alphabetic'])
-                    ? $study['series'][0]['00081050']['Value'][0]['Alphabetic']
-                    : '-'),
-                'Médico' => isset($study['00080090']['Value'][0]['Alphabetic'])?$study['00080090']['Value'][0]['Alphabetic']:'-',
-                'Diagnóstico' => isset($study['00081030']['Value'][0])?$study['00081030']['Value'][0]:'-',
-                'Descripcion' => isset($study['001021B0']['Value'][0])?$study['001021B0']['Value'][0]:'-', // (0010,21B0) No estaba claro en tu código original
-                'Ubicación' => isset($study['00080050']['Value'][0])?$study['00080050']['Value'][0]:'-',
-                'PCuerpo' => isset($study['series'][0]['00180015']['Value'][0]),
-                'Mo' => ($study['00080061']['Value'][0]=='DOC')?$study['00080061']['Value'][1]:$study['00080061']['Value'][0],
-                'Informe'=>$informe,
-                'CantInst' => $study['7777102A']['Value'][0],
-                'studyUID' => $study['0020000D']['Value'][0],
-            ];
+                if (array_search('DOC', $study['00080061']['Value']) != '')
+                    $informe = 'si';
+                else $informe = 'no';
+                $dataToUpsert[] = [
+                    'Fecha' => $study['00080020']['Value'][0]??NULL,
+                    'Hora' => isset($study['00080030']['Value'][0])?substr($study['00080030']['Value'][0], 0, 4):NULL,
+                    'DNI' => isset($study['00100020']['Value'][0])?$study['00100020']['Value'][0]:'-',
+                    'Paciente' => isset($study['00100010']['Value'][0]['Alphabetic'])?$study['00100010']['Value'][0]['Alphabetic']:'-',
+                    'Sexo' => isset($study['00100040']['Value'][0]) ? $study['00100040']['Value'][0] : '-',
+                    'Nacimiento' => $study['00100030']['Value'][0] ?? NULL,
+                    'Os' => isset($study['series'][0]['00081040']['Value'][0])
+                        ? $study['series'][0]['00081040']['Value'][0]
+                        : (isset($study['series'][0]['00081050']['Value'][0]['Alphabetic'])
+                            ? $study['series'][0]['00081050']['Value'][0]['Alphabetic']
+                            : '-'),
+                    'Médico' => isset($study['00080090']['Value'][0]['Alphabetic']) ? $study['00080090']['Value'][0]['Alphabetic'] : '-',
+                    'Diagnóstico' => isset($study['00081030']['Value'][0]) ? $study['00081030']['Value'][0] : '-',
+                    'Descripcion' => isset($study['001021B0']['Value'][0]) ? $study['001021B0']['Value'][0] : '-', // (0010,21B0) No estaba claro en tu código original
+                    'Ubicación' => isset($study['00080050']['Value'][0]) ? $study['00080050']['Value'][0] : '-',
+                    'PCuerpo' => isset($study['series'][0]['00180015']['Value'][0])?$study['series'][0]['00180015']['Value'][0]:'-',
+                    'Mo' => ($study['00080061']['Value'][0] == 'DOC') ? $study['00080061']['Value'][1] : $study['00080061']['Value'][0],
+                    'Informe' => $informe,
+                    'CantInst' => $study['00201208']['Value'][0]??NULL,
+                    'studyUID' => $study['0020000D']['Value'][0],
+                ];
+            }
+
+            Estudio::upsert($dataToUpsert, ['studyUID'], ['Fecha', 'Hora', 'DNI', 'Paciente', 'Sexo', 'Nacimiento', 'Os', 'Médico', 'Diagnóstico', 'Descripcion', 'Ubicación', 'PCuerpo', 'Mo', 'Informe', 'CantInst']);
         }
-
-        Estudio::upsert($dataToUpsert, ['studyUID'], ['Fecha', 'Hora','DNI', 'Paciente', 'Sexo', 'Nacimiento', 'Os', 'Médico', 'Diagnóstico', 'Descripcion', 'Ubicación', 'PCuerpo', 'Mo','Informe', 'CantInst']);
-
-    }
         $studiesCollection = collect($studies);
 
 
         // Ordenar los resultados según el campo y tipo de orden
-        if (isset($studies)){
-        $studiesCollection = $studiesCollection->sortByDesc(function ($item) {
-            return $item['00080020']['Value'][0];
-        })->values();
-    }
+        if (isset($studies)) {
+            $studiesCollection = $studiesCollection->sortByDesc(function ($item) {
+                return $item['00080020']['Value'][0];
+            })->values();
+        }
         $paginator = new LengthAwarePaginator($studiesCollection, $total, $this->perPage, $page);
         $paginator->withPath(request()->url());
 
@@ -134,53 +137,17 @@ class GrillaEstudios extends Component
 
     public function exportar()
     {
-        $this->perPage = 50;
-        $page = $this->page;
+        // Establece el estado de exportación a true
+       $this->exportando = true;
+       $this->emit('mostrarMensajeExportacion');
 
+       $export = new StudiesExport($this->fechad, $this->fechah, $this->filtroPaciente);
+       return Excel::download($export, 'estudios.xlsx');
 
-        $desde = str_replace("-", "", $this->fechad);
-        $hasta = str_replace("-", "", $this->fechah);
+        // Establece el estado de exportación a false después de finalizar
+        $this->exportando = false;
 
-        $DNIPaciente=intval($this->filtroPaciente);
-
-        if ($DNIPaciente===0)
-            $paciente='&PatientName=';
-        else
-            $paciente='&PatientID=';
-
-
-        $this->mayuscula=strtoupper($this->filtroPaciente);
-
-        if ($this->mayuscula<>'') {
-            $filtro = $paciente . $this->mayuscula . '*&fuzzymatching=false';
-        } else {
-            $filtro = '&limit=' . $this->perPage . '&offset=' . ($page - 1) * $this->perPage;
-        }
-
-        //$this->cadena='$paciente='.$paciente.' http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies?includefield=all&StudyDate=' . $desde . '-' . $hasta . $filtro;
-        $response = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies?includefield=all&StudyDate=' . $desde . '-' . $hasta . $filtro);
-        $studies = $response->json();
-
-        $response2 = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/count?StudyDate=' . $desde . '-' . $hasta . $filtro);
-        $count = $response2->json();
-
-        $total = $count["count"] ?? 0;
-
-        if (isset($studies)){// Obtener los campos de las series para cada estudio y combinarlos
-        foreach ($studies as &$study) {
-            $studyId = $study['0020000D']['Value'][0]; // Reemplaza con la clave correcta para el ID del estudio
-            $seriesResponse = Http::get('http://imagenes.simedsalud.com.ar:8080/dcm4chee-arc/aets/SSPACS/rs/studies/' . $studyId . '/series?includefield=all');
-            $series = $seriesResponse->json();
-            $study['series'] = $series;
-            }
-        }
-        $studiesCollection = collect($studies);
-
-        if ($studiesCollection) {
-         Excel::download(new StudiesExport($studiesCollection), 'estudios.xlsx');
-        }else{
-
-        }
+        $this->emit('ocultarMensajeExportacion');
     }
 
 

@@ -16,6 +16,7 @@ return new class extends Migration
             // ------------------- inicia campos estudios
 
             $table->date('Fecha');//00080020
+            $table->integer('Hora');//00080020
             $table->string('DNI');//00100020
             $table->string('Paciente');//00100010
             $table->string('Sexo');//00100040

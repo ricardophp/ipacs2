@@ -48,7 +48,6 @@
                 Grabar Informe
             </x-danger-button>
 
-
             <x-secondary-button wire:click="$set('open',false)">
                 Cancelar
             </x-secondary-button> --}}
@@ -65,6 +64,12 @@
                     class="disabled:opacity-25">
                     Subir archivo PDF
                 </x-danger-button>
+
+                <x-danger-button wire:click="mwl" wire:loading.attr="disabled" wire:target="mwl"
+                class="disabled:opacity-25">
+                 MWL
+                </x-danger-button>
+
             </div>
         </x-slot>
     </x-dialog-modal>
